@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30517.126
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CipherWpf", "CipherWpf\CipherWpf.csproj", "{35FE5B5F-CB41-4FD5-95D7-FA0D8F74D81A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CipherWpf", "CipherWpf\CipherWpf.csproj", "{35FE5B5F-CB41-4FD5-95D7-FA0D8F74D81A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cipher", "Cipher\Cipher.csproj", "{3124427E-E674-40E5-B928-93BB656486A9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CipherCLI", "CipherCLI\CipherCLI.csproj", "{46D28FDD-F233-4974-B047-B87B8EAF5139}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{35FE5B5F-CB41-4FD5-95D7-FA0D8F74D81A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{35FE5B5F-CB41-4FD5-95D7-FA0D8F74D81A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{35FE5B5F-CB41-4FD5-95D7-FA0D8F74D81A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3124427E-E674-40E5-B928-93BB656486A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3124427E-E674-40E5-B928-93BB656486A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3124427E-E674-40E5-B928-93BB656486A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3124427E-E674-40E5-B928-93BB656486A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46D28FDD-F233-4974-B047-B87B8EAF5139}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46D28FDD-F233-4974-B047-B87B8EAF5139}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46D28FDD-F233-4974-B047-B87B8EAF5139}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46D28FDD-F233-4974-B047-B87B8EAF5139}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

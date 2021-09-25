@@ -3,7 +3,7 @@ using System.Text;
 
 namespace Cipher
 {
-    class Vizhener : ICipher
+    public class Vizhener : ICipher
     {
         private string key;
         public string Key 
@@ -13,10 +13,10 @@ namespace Cipher
             {
                 key = value;
                 offsets = new int[key.Length];
-                for (int i = 0; i < offsets.Length; i++)
+                for (int i = 0; i < offsets.Length; ++i)
                     offsets[i] = 0;
-                for (int i = 0; i < key.Length; i++)
-                    for (int j = 0; j < alphabets.Length; j++)
+                for (int i = 0; i < key.Length; ++i)
+                    for (int j = 0; j < alphabets.Length; ++j)
                         if (alphabets[j].Contains(key[i], out int index))
                         {
                             offsets[i] = index;
@@ -28,17 +28,6 @@ namespace Cipher
 
         public readonly IAlphabet[] alphabets;
         private int[] offsets;
-        //public Vizhener()
-        //{
-        //    Alphabets = new IAlphabet[]
-        //           {
-        //                new Alphabet(),
-        //                new Alphabet("abcdefghijklmnopqrstuvwxyz"),
-        //                new Alphabet("АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ"),
-        //                new Alphabet("абвгдеёжзийклмнопрстуфхцчшщъыьэюя"),
-        //                new Alphabet("0123456789")
-        //           };
-        //}
 
         public Vizhener() 
         {
@@ -48,12 +37,6 @@ namespace Cipher
                 };
             Key = "A";
         }
-
-        //public Vizhener(IAlphabet[] alphabets)
-        //{
-        //    this.alphabets = alphabets;
-        //    Key = alphabets[0][0].ToString();
-        //}
 
         public Vizhener(IAlphabet alphabet)
         {
@@ -65,7 +48,7 @@ namespace Cipher
         public string Encrypt(string message)
         {
             StringBuilder s = new StringBuilder(message.Length);
-            for (int i = 0; i < message.Length; i++)
+            for (int i = 0; i < message.Length; ++i)
                 s.Append(Encrypt(message[i], i, message.Length));
             return s.ToString();
         }
@@ -73,14 +56,14 @@ namespace Cipher
         public string Decrypt(string encryptedMessage)
         {
             StringBuilder s = new StringBuilder(encryptedMessage.Length);
-            for (int i = 0; i < encryptedMessage.Length; i++)
+            for (int i = 0; i < encryptedMessage.Length; ++i)
                 s.Append(Decrypt(encryptedMessage[i], i, encryptedMessage.Length));
             return s.ToString();
 
         }
-        public char Encrypt(char character, int indexOfCharacter,int messageLength)
+        public char Encrypt(char character, int indexOfCharacter, int messageLength)
         {
-            for (int i = 0; i < alphabets.Length; i++)
+            for (int i = 0; i < alphabets.Length; ++i)
                 if (alphabets[i].Contains(character, out int index)) 
                 {
                     int minLength = Math.Min(messageLength, Key.Length);
@@ -91,7 +74,7 @@ namespace Cipher
         }
         public char Decrypt(char character, int indexOfCharacter, int messageLength)
         {
-            for (int i = 0; i < alphabets.Length; i++)
+            for (int i = 0; i < alphabets.Length; ++i)
                 if (alphabets[i].Contains(character, out int index))
                 {
                     int minLength = Math.Min(messageLength, Key.Length);

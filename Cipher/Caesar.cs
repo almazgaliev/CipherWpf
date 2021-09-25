@@ -3,7 +3,7 @@ using System.Text;
 
 namespace Cipher
 {
-    class Caesar : ICipher
+    public class Caesar : ICipher
     {
         public readonly IAlphabet[] alphabets;
         private readonly Offset[] offsets;
@@ -14,25 +14,13 @@ namespace Cipher
             set
             {
                 key = value;
-                for (int i = 0; i < alphabets.Length; i++)
+                for (int i = 0; i < alphabets.Length; ++i)
+                {
                     offsets[i].SetOffset(key);
+                }
             }
         }
-        //public Caesar()
-        //{
-        //    alphabets = new IAlphabet[]
-        //        {
-        //            new Alphabet(),
-        //            new Alphabet("abcdefghijklmnopqrstuvwxyz"),
-        //            new Alphabet("АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ"),
-        //            new Alphabet("абвгдеёжзийклмнопрстуфхцчшщъыьэюя"),
-        //            new Alphabet("0123456789")
-        //        };
-        //    offsets = new Offset[alphabets.Length];
-        //    for (int i = 0; i < alphabets.Length; i++)
-        //        offsets[i] = new Offset(alphabets[i].Length);
-        //    Key = 0;
-        //}
+
         public Caesar()
         {
             alphabets = new IAlphabet[]
@@ -41,36 +29,41 @@ namespace Cipher
                 };
             offsets = new Offset[alphabets.Length];
             for (int i = 0; i < alphabets.Length; i++)
+            {
                 offsets[i] = new Offset(alphabets[i].Length);
+            }
+
             Key = 0;
         }
         public Caesar(IAlphabet[] alphabets) : this()
         {
             this.alphabets = alphabets;
             offsets = new Offset[alphabets.Length];
-            for (int i = 0; i < alphabets.Length; i++)
+            for (int i = 0; i < alphabets.Length; ++i)
                 offsets[i] = new Offset(alphabets[i].Length);
         }
 
         public Caesar(IAlphabet alphabet) : this()
         {
-            this.alphabets = new IAlphabet[] { alphabet };
+            alphabets = new IAlphabet[] { alphabet };
             offsets = new Offset[alphabets.Length];
-            for (int i = 0; i < alphabets.Length; i++)
+            for (int i = 0; i < alphabets.Length; ++i)
                 offsets[i] = new Offset(alphabets[i].Length);
         }
 
         public string Encrypt(string message)
         {
-            StringBuilder s = new StringBuilder(message.Length);
-            for (int i = 0; i < message.Length; i++)
-                s.Append(Encrypt(message[i]));
-            return s.ToString();
+            StringBuilder cryptogram = new(message.Length);
+            for (int i = 0; i < message.Length; ++i)
+            {
+                cryptogram.Append(Encrypt(message[i]));
+            }
+            return cryptogram.ToString();
         }
         public string Decrypt(string encryptedMessage)
         {
-            StringBuilder s = new StringBuilder(encryptedMessage.Length);
-            for (int i = 0; i < encryptedMessage.Length; i++)
+            StringBuilder s = new(encryptedMessage.Length);
+            for (int i = 0; i < encryptedMessage.Length; ++i)
                 s.Append(Decrypt(encryptedMessage[i]));
             return s.ToString();
         }
@@ -110,8 +103,11 @@ namespace Cipher
             #endregion 
 
             for (int i = 0; i < alphabets.Length; i++)
+            {
                 if (alphabets[i].Contains(character, out int indexOfCharacter))
                     return alphabets[i][indexOfCharacter + offsets[i].Value];
+            }
+
             return character;
         }
 

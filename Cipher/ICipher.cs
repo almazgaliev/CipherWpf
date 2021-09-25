@@ -1,6 +1,6 @@
 ﻿namespace Cipher 
 {
-    interface ICipher
+    public interface ICipher
     {
         string Encrypt(string message);
         string Decrypt(string message);

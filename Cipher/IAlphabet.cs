@@ -2,7 +2,7 @@
 
 namespace Cipher
 {
-    interface IAlphabet
+    public interface IAlphabet
     {
         public char this[int index] { get; }
         public char this[BigInteger index] { get; }
