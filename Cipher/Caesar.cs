@@ -1,12 +1,12 @@
 ﻿using System.Numerics;
 using System.Text;
 
-namespace Cipher
+namespace Cipher.Caesar
 {
     public class Caesar : ICipher
     {
         public readonly IAlphabet[] alphabets;
-        private readonly Offset[] offsets;
+        private readonly IntOffset[] offsets;
         private BigInteger key;
         public BigInteger Key
         {
@@ -24,13 +24,13 @@ namespace Cipher
         public Caesar()
         {
             alphabets = new IAlphabet[]
-                {
-                    new Alphabet("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"),
-                };
-            offsets = new Offset[alphabets.Length];
+            {
+                new Alphabet("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"),
+            };
+            offsets = new IntOffset[alphabets.Length];
             for (int i = 0; i < alphabets.Length; i++)
             {
-                offsets[i] = new Offset(alphabets[i].Length);
+                offsets[i] = new IntOffset(alphabets[i].Length);
             }
 
             Key = 0;
@@ -38,17 +38,17 @@ namespace Cipher
         public Caesar(IAlphabet[] alphabets) : this()
         {
             this.alphabets = alphabets;
-            offsets = new Offset[alphabets.Length];
+            offsets = new IntOffset[alphabets.Length];
             for (int i = 0; i < alphabets.Length; ++i)
-                offsets[i] = new Offset(alphabets[i].Length);
+                offsets[i] = new IntOffset(alphabets[i].Length);
         }
 
         public Caesar(IAlphabet alphabet) : this()
         {
             alphabets = new IAlphabet[] { alphabet };
-            offsets = new Offset[alphabets.Length];
+            offsets = new IntOffset[alphabets.Length];
             for (int i = 0; i < alphabets.Length; ++i)
-                offsets[i] = new Offset(alphabets[i].Length);
+                offsets[i] = new IntOffset(alphabets[i].Length);
         }
 
         public string Encrypt(string message)
@@ -69,39 +69,8 @@ namespace Cipher
         }
         public char Encrypt(char character)
         {
-            #region SimpleCase
-            //if (char.IsLetter(character))
-            //{
-            //    if (char.IsLower(character))
-            //        return (char)('a' + (character - 'a' + key) % Lenght);
-            //    else
-            //        return (char)('A' + (character - 'A' + key) % Lenght);
-            //}
-            //else if (char.IsDigit(character))
-            //{
-            //    return (char)('0' + (character - '0' + key) % Lenght % 10);
-            //}
-            //else
-            //    return character;
-            #endregion
 
-            #region MediumCase
-            // every alphabet is string here
-            //if (AlphabetUpper.Contains(character))
-            //    return AlphabetUpper[(AlphabetUpper.IndexOf(character) + characterOffset) % Lenght];
-
-            //else if (AlphabetLower.Contains(character))
-            //    return AlphabetLower[(AlphabetLower.IndexOf(character) + characterOffset) % Lenght];
-
-            //else if (char.IsDigit(character))
-            //    return (char)('0' + (character - '0' + digitOffset) % 10);
-
-            //else if (AdditionalAlphabetsContains(character, out int indexOfAlphabet, out int indexOfChar))
-            //    return AdditionalAlphabets[indexOfAlphabet][(indexOfChar + characterOffset) % AdditionalAlphabets[indexOfAlphabet].Length];
-            //else
-            //    return character;
-            #endregion 
-
+            // TODO add exception throwing if alphabet doesnt contain character
             for (int i = 0; i < alphabets.Length; i++)
             {
                 if (alphabets[i].Contains(character, out int indexOfCharacter))

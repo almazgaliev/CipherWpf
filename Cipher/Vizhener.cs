@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Text;
 
-namespace Cipher
+namespace Cipher.Vizhener
 {
+    /// <summary>
+    /// Vizhener's cipher implementation
+    /// </summary>
     public class Vizhener : ICipher
     {
         private string key;

@@ -3,56 +3,9 @@
 
 namespace Cipher
 {
-    public class MemAlphabet : IAlphabet
-    {
-        private readonly char begin;
-        private readonly char end;
-        public char this[int index] => (char)(begin + (index % Length + Length) % Length);
-
-        public char this[BigInteger index] => (char)(begin + ((int)(index % Length) + Length) % Length);
-
-        private int length;
-        public int Length { get => length; }
-
-        public MemAlphabet()
-        {
-            begin = 'A';
-            end = 'Z';
-            length = end - begin + 1;
-        }
-
-        public MemAlphabet(char begin, char end)
-        {
-            if (begin >= end)
-                throw new System.Exception("end is not less than begin");
-            this.begin = begin;
-            this.end = end;
-            length = end - begin + 1;
-        }
-
-        public int IndexOf(char character)
-        {
-            if (end < character || begin > character)
-                return -1;
-            else
-                return character - begin;
-        }
-
-        public bool Contains(char character) => character >= begin && character <= end;
-        public bool Contains(char character, out int indexOfChar)
-        {
-            indexOfChar = IndexOf(character);
-            return indexOfChar != -1;
-        }
-        public override string ToString()
-        {
-            int capacity = end - begin + 1;
-            var s = new System.Text.StringBuilder(capacity);
-            for (int i = 0; i < capacity; ++i)
-                s.Append(begin + i);
-            return s.ToString();
-        }
-    }
+    /// <summary>
+    /// Alphabet class that supports modded indexing
+    /// </summary>
     public class Alphabet : IAlphabet
     {
         private readonly string alphabet;
@@ -87,11 +40,11 @@ namespace Cipher
 
     }
 
-    public class Offset
+    internal class IntOffset
     {
         public int Value { get; private set; }
         private readonly int alphabetLength;
-        public Offset(int length)
+        public IntOffset(int length)
         {
             Value = 0;
             alphabetLength = length;

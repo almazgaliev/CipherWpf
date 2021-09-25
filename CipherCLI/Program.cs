@@ -1,78 +1,71 @@
 ﻿using System;
+using System.Numerics;
 using Cipher;
+using Cipher.Caesar;
+using Cipher.Vizhener;
 using CommandLine;
 
 namespace CipherCLI
 {
     public class Program
     {
-        private static readonly IAlphabet[] alphabets;
-        private static ICipher cipher;
-        private static int selectedCipher = 0;
-        private static int selectedLanguage = 1;
-
-        private class Options
-        {
-            public int selectedLanguage;
-            [Option('l', "language", Default = "en-US", HelpText = "language. \n'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'(en-US),\n'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ0123456789'(ru-RU) are supported")]
-            private string Language
-            {
-                set
-                {
-                    switch (value)
-                    {
-                        case "en-US":
-                            selectedLanguage = 0;
-                            break;
-                        case "ru-RU":
-                            selectedLanguage = 1;
-                            break;
-                        default:
-                            Console.WriteLine("Language is incorrect, selected en-US");
-                            selectedLanguage = 0;
-                            break;
-                    }
-                }
-            }
-            public int selectedCipher;
-            [Option('c', "Cipher", Default = "Caesar", HelpText = "Caesar or Vizhener")]
-            private string Cipher
-            {
-                set
-                {
-                    switch (value)
-                    {
-                        case "Caesar":
-                            cipher = new Caesar();
-                            break;
-                        case "Vizhener":
-                            selectedLanguage = 1;
-                            break;
-                        default:
-                            Console.WriteLine("Cipher is incorrect, selected e");
-                            selectedLanguage = 0;
-                            break;
-                    }
-                }
-            }
-        }
-        static Program()
-        {
-            alphabets = new IAlphabet[]
-            {
+        private static readonly IAlphabet[] alphabets = new[]{
                 new Alphabet("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"),
                 new Alphabet("АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ0123456789"),
             };
-        }
+        private static ICipher cipher;
+
+
         static void Main(string[] args)
         {
-
-            Parser.Default.ParseArguments<Options>(args).WithParsed((o) => { selectedLanguage = o.selectedLanguage; cipher =  });
-            cipher = new Caesar(alphabets[0])
+            int selectedLanguage = 1;
+            string cipherAlgoritm = "";
+            string key = "key";
+            Parser.Default.ParseArguments<Options>(args).WithParsed(
+                (o) =>
+                {
+                    selectedLanguage = o.SelectedLanguage;
+                    cipherAlgoritm = o.CipherAlgorithm;
+                    key = o.Key.ToUpper();
+                }
+            );
+            switch (cipherAlgoritm)
             {
-                Key = 123
-            };
-            Console.WriteLine("Hello World!");
+                case "Caesar":
+                    if (BigInteger.TryParse(key, out BigInteger intKey))
+                        cipher = new Caesar(alphabets[selectedLanguage]) { Key = intKey };
+                    else
+                    {
+                        Console.WriteLine($"'{key}' is not bigInt");
+                        return;
+                    }
+                    break;
+                case "Vizhener":
+                    cipher = new Vizhener(alphabets[selectedLanguage]) { Key = key };
+                    break;
+                default:
+                    Console.WriteLine("Cipher is incorrect, selected Caesar");
+                    selectedLanguage = 0;
+                    break;
+            }
+
+            RunAppInteraction();
+
+        }
+
+        // TODO add decode shortcut event handler 
+        private static void RunAppInteraction()
+        {
+            while (true)
+            {
+                Console.Write("# ");
+                string input = Console.ReadLine().Trim().ToUpper();
+                if (input != "")
+                {
+                    string output = cipher.Encrypt(input);
+                    Console.WriteLine(output);
+                }
+            }
         }
     }
 }
