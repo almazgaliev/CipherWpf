@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CipherWpf", "CipherWpf\Ciph
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cipher", "Cipher\Cipher.csproj", "{3124427E-E674-40E5-B928-93BB656486A9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CipherCLI", "CipherCLI\CipherCLI.csproj", "{46D28FDD-F233-4974-B047-B87B8EAF5139}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CipherCLI", "CipherCLI\CipherCLI.csproj", "{46D28FDD-F233-4974-B047-B87B8EAF5139}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

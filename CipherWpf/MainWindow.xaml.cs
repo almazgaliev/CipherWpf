@@ -1,7 +1,10 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
 using System.Windows;
 using System.Windows.Controls;
 using Cipher;
+using Cipher.Caesar;
+using Cipher.Vizhener;
 
 namespace CipherWpf
 {
@@ -14,8 +17,8 @@ namespace CipherWpf
         private ICipher cipher;
         private int selectedCipher = 0;
         private int selectedLanguage = 1;
-        private delegate string getKeyDel();
-        getKeyDel getKey;
+        //private delegate string getKeyDel();
+        private Func<string> getKey;
 
 
         public MainWindow()
@@ -27,8 +30,11 @@ namespace CipherWpf
                 new Alphabet("АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ0123456789"),
             };
 
-            cipher = new Vizhener(alphabets[0]) { Key = "QPRST" };
-
+            cipher = new Caesar(alphabets[0])
+            {
+                Key = 123
+            };
+            //cipher = new Vizhener(alphabets[0]) { Key = "QPRST" };
 
             keyTextbox.Text = getKey();
         }
@@ -96,7 +102,7 @@ namespace CipherWpf
             if (IsCorrectInput(inputTextbox.Text))
                 encryptedOutputTextbox.Text = cipher.Encrypt(inputTextbox.Text);
             else
-                MessageBox.Show("Неправильный ввод, проверьте язык");
+                MessageBox.Show("Неправильный ввод");
         }
 
         private void LanguageRadioButton_Checked(object sender, RoutedEventArgs e)
@@ -107,11 +113,10 @@ namespace CipherWpf
         private bool IsCorrectInput(string input)
         {
             for (int i = 0; i < input.Length; i++)
-                if (!alphabets[selectedLanguage].Contains(input[i]) && !char.IsWhiteSpace(input[i]) && !char.IsPunctuation(input[i])) 
-                        return false;
+                if (!(alphabets[selectedLanguage].Contains(input[i]) || !char.IsPunctuation(input[i])))
+                    return false;
             return true;
         }
 
-        //private void CommandBinding_Executed(object sender, System.Windows.Input.ExecutedRoutedEventArgs e){}
     }
 }
