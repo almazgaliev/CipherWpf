@@ -103,13 +103,19 @@ namespace CipherWpf
         {
             var invalidCharacters = InvalidChars(inputTextbox.Text);
             int invalidAmount = invalidCharacters.Count();
+            bool tooMuchInvalids = false;
             if (invalidAmount > 0)
             {
+                if (tooMuchInvalids = invalidAmount > 5)
+                    invalidCharacters = invalidCharacters.Take(5);
+
                 string errorFormat = "on position {0} '{1}';\n";
                 StringBuilder errorInfo = new StringBuilder(errorFormat.Length * invalidAmount + 1);
                 errorInfo.Append("Invalid inputs\n");
                 foreach (var invalid in invalidCharacters)
                     errorInfo.Append(string.Format(errorFormat, invalid.Item1, invalid.Item2));
+                if (tooMuchInvalids)
+                    errorInfo.Append("...");
                 MessageBox.Show(errorInfo.ToString());
             }
             else
@@ -124,7 +130,8 @@ namespace CipherWpf
         private IEnumerable<Tuple<int, char>> InvalidChars(string input)
         {
             for (int i = 0; i < input.Length; ++i)
-                if (!(alphabets[selectedLanguage].Contains(input[i]) || !char.IsPunctuation(input[i])))
+                //TODO refactor
+                if (!(alphabets[selectedLanguage].Contains(input[i]) && !char.IsPunctuation(input[i]) || input[i] == '\r' || input[i]=='\n'))
                     yield return Tuple.Create(i, input[i]);
         }
     }
