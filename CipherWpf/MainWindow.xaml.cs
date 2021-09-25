@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Numerics;
 using System.Windows;
 using System.Windows.Controls;
 using Cipher;
 using Cipher.Caesar;
 using Cipher.Vizhener;
+using System.Linq;
+using System.Text;
 
 namespace CipherWpf
 {
@@ -43,13 +46,22 @@ namespace CipherWpf
             IAlphabet alphabet = alphabets[selectedLanguage];
             if (selectedCipher == 0)
             {
-                if (IsCorrectInput(keyTextbox.Text))
+                var invalidCharacters = InvalidChars(keyTextbox.Text);
+                int invalidAmount = invalidCharacters.Count();
+                if (invalidAmount > 0)
                 {
+                    string errorFormat = "on position {0} '{1}';\n";
+                    StringBuilder errorInfo = new StringBuilder(errorFormat.Length * invalidAmount + 1);
+                    errorInfo.Append("Invalid key\n");
+                    foreach (var invalid in invalidCharacters)
+                        errorInfo.Append(string.Format(errorFormat, invalid.Item1, invalid.Item2));
+                    MessageBox.Show(errorInfo.ToString());
+                }
+                else
+                { 
                     cipher = new Vizhener(alphabet) { Key = keyTextbox.Text };
                     MessageBox.Show("Good");
                 }
-                else
-                    MessageBox.Show("Ключ введен на неправильном языке");
             }
             else //if (selected == 1)
             {
@@ -59,7 +71,7 @@ namespace CipherWpf
                     MessageBox.Show("Good");
                 }
                 else
-                    MessageBox.Show("Key aint a number");
+                    MessageBox.Show("Key is not a number");
             }
         }
 
@@ -75,16 +87,6 @@ namespace CipherWpf
             }
         }
 
-        //private void InputTextbox_TextChanged(object sender, TextChangedEventArgs e) не успевает обрабатывать изменения
-        //{
-        //    foreach(TextChange x in e.Changes)
-        //    {
-        //        string s = (sender as TextBox).Text.Substring(x.Offset, x.AddedLength);
-        //        s = cipher.Encrypt(s);
-        //        encryptedOutputTextbox.Text = encryptedOutputTextbox.Text.Insert(x.Offset, s);
-        //    }
-        //}
-
         private void СlearButton_Click(object sender, RoutedEventArgs e)
         {
             encryptedOutputTextbox.Clear();
@@ -99,10 +101,19 @@ namespace CipherWpf
 
         private void EncryptButton_Click(object sender, RoutedEventArgs e)
         {
-            if (IsCorrectInput(inputTextbox.Text))
-                encryptedOutputTextbox.Text = cipher.Encrypt(inputTextbox.Text);
+            var invalidCharacters = InvalidChars(inputTextbox.Text);
+            int invalidAmount = invalidCharacters.Count();
+            if (invalidAmount > 0)
+            {
+                string errorFormat = "on position {0} '{1}';\n";
+                StringBuilder errorInfo = new StringBuilder(errorFormat.Length * invalidAmount + 1);
+                errorInfo.Append("Invalid inputs\n");
+                foreach (var invalid in invalidCharacters)
+                    errorInfo.Append(string.Format(errorFormat, invalid.Item1, invalid.Item2));
+                MessageBox.Show(errorInfo.ToString());
+            }
             else
-                MessageBox.Show("Неправильный ввод");
+                encryptedOutputTextbox.Text = cipher.Encrypt(inputTextbox.Text);
         }
 
         private void LanguageRadioButton_Checked(object sender, RoutedEventArgs e)
@@ -110,13 +121,11 @@ namespace CipherWpf
             selectedLanguage = int.Parse((sender as RadioButton).Tag.ToString());
         }
 
-        private bool IsCorrectInput(string input)
+        private IEnumerable<Tuple<int, char>> InvalidChars(string input)
         {
-            for (int i = 0; i < input.Length; i++)
+            for (int i = 0; i < input.Length; ++i)
                 if (!(alphabets[selectedLanguage].Contains(input[i]) || !char.IsPunctuation(input[i])))
-                    return false;
-            return true;
+                    yield return Tuple.Create(i, input[i]);
         }
-
     }
 }
