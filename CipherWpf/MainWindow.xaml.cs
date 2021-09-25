@@ -19,8 +19,8 @@ namespace CipherWpf
         private readonly IAlphabet[] alphabets;
         private ICipher cipher;
         private int selectedCipher = 0;
-        private int selectedLanguage = 1;
-        //private delegate string getKeyDel();
+        private int selectedLanguage = 0;
+        private int SelectedLanguageRadioButton = 0;
         private Func<string> getKey;
 
 
@@ -43,25 +43,17 @@ namespace CipherWpf
         }
         private void CreateCipherButton_Click(object sender, RoutedEventArgs e)
         {
+            selectedLanguage = SelectedLanguageRadioButton;
             IAlphabet alphabet = alphabets[selectedLanguage];
             if (selectedCipher == 0)
             {
-                var invalidCharacters = InvalidChars(keyTextbox.Text);
-                int invalidAmount = invalidCharacters.Count();
-                if (invalidAmount > 0)
+                RunIfValid(keyTextbox.Text, () =>
                 {
-                    string errorFormat = "on position {0} '{1}';\n";
-                    StringBuilder errorInfo = new StringBuilder(errorFormat.Length * invalidAmount + 1);
-                    errorInfo.Append("Invalid key\n");
-                    foreach (var invalid in invalidCharacters)
-                        errorInfo.Append(string.Format(errorFormat, invalid.Item1, invalid.Item2));
-                    MessageBox.Show(errorInfo.ToString());
-                }
-                else
-                { 
                     cipher = new Vizhener(alphabet) { Key = keyTextbox.Text };
                     MessageBox.Show("Good");
-                }
+                },
+                 "Invalid key"
+                );
             }
             else //if (selected == 1)
             {
@@ -73,6 +65,29 @@ namespace CipherWpf
                 else
                     MessageBox.Show("Key is not a number");
             }
+        }
+
+        private void RunIfValid(string text, Action action, string errorMessage = "Invalid input")
+        {
+            var invalidCharacters = InvalidChars(text);
+            int invalidAmount = invalidCharacters.Count();
+            bool tooMuchInvalids = false;
+            if (invalidAmount > 0)
+            {
+                if (tooMuchInvalids = invalidAmount > 5)
+                    invalidCharacters = invalidCharacters.Take(5);
+
+                string errorFormat = "on position {0} '{1}';\n";
+                StringBuilder errorInfo = new StringBuilder(errorFormat.Length * invalidAmount + 1);
+                errorInfo.Append(errorMessage);
+                errorInfo.Append("\n");
+                foreach (var invalid in invalidCharacters)
+                    errorInfo.Append(string.Format(errorFormat, invalid.Item1, invalid.Item2));
+                if (tooMuchInvalids)
+                    errorInfo.Append("...");
+                MessageBox.Show(errorInfo.ToString());
+            }
+            else action();
         }
 
         private void CipherRadioButton_Checked(object sender, RoutedEventArgs e)
@@ -101,37 +116,19 @@ namespace CipherWpf
 
         private void EncryptButton_Click(object sender, RoutedEventArgs e)
         {
-            var invalidCharacters = InvalidChars(inputTextbox.Text);
-            int invalidAmount = invalidCharacters.Count();
-            bool tooMuchInvalids = false;
-            if (invalidAmount > 0)
-            {
-                if (tooMuchInvalids = invalidAmount > 5)
-                    invalidCharacters = invalidCharacters.Take(5);
-
-                string errorFormat = "on position {0} '{1}';\n";
-                StringBuilder errorInfo = new StringBuilder(errorFormat.Length * invalidAmount + 1);
-                errorInfo.Append("Invalid inputs\n");
-                foreach (var invalid in invalidCharacters)
-                    errorInfo.Append(string.Format(errorFormat, invalid.Item1, invalid.Item2));
-                if (tooMuchInvalids)
-                    errorInfo.Append("...");
-                MessageBox.Show(errorInfo.ToString());
-            }
-            else
-                encryptedOutputTextbox.Text = cipher.Encrypt(inputTextbox.Text);
+            RunIfValid(inputTextbox.Text, () => { encryptedOutputTextbox.Text = cipher.Encrypt(inputTextbox.Text); }, "Invalid input");
         }
 
         private void LanguageRadioButton_Checked(object sender, RoutedEventArgs e)
         {
-            selectedLanguage = int.Parse((sender as RadioButton).Tag.ToString());
+            SelectedLanguageRadioButton = int.Parse((sender as RadioButton).Tag.ToString());
         }
 
         private IEnumerable<Tuple<int, char>> InvalidChars(string input)
         {
             for (int i = 0; i < input.Length; ++i)
                 //TODO refactor
-                if (!(alphabets[selectedLanguage].Contains(input[i]) && !char.IsPunctuation(input[i]) || input[i] == '\r' || input[i]=='\n'))
+                if (!(alphabets[selectedLanguage].Contains(input[i]) && !char.IsPunctuation(input[i]) || input[i] == '\r' || input[i] == '\n' || input[i] == ' '))
                     yield return Tuple.Create(i, input[i]);
         }
     }
