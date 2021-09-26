@@ -39,8 +39,8 @@
         <TextBox x:Name="decryptedOutputTextbox" Margin="5" TextWrapping="Wrap" Text="" Background="#FFE7EDFF" Grid.Column="1" Grid.Row="5" BorderBrush="#FFE7EDFF" CharacterCasing="Upper"/>
         <Label Content="Текст после расшифровки" FontFamily="Century Gothic" FontWeight="Bold" HorizontalAlignment="Left" Margin="5,5,0,5" Grid.Column="1" Grid.Row="4"/>
         <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Margin="5" HorizontalAlignment="Right" Background="#FFE7EDFF">
-            <RadioButton Tag="0" GroupName="CipherType" Content="Шифр Виженера"  HorizontalAlignment="Left" Margin="5" VerticalAlignment="Top" Checked="CipherRadioButton_Checked" />
-            <RadioButton Tag="1" GroupName="CipherType" Content="Шифр Цезаря" HorizontalAlignment="Left" Margin="5" VerticalAlignment="Top" Checked="CipherRadioButton_Checked" IsChecked="True"/>
+            <RadioButton Tag="0" GroupName="CipherType" FontFamily="Century Gothic" FontWeight="Bold" Content="Шифр Виженера"  HorizontalAlignment="Left" Margin="5" VerticalAlignment="Top" Checked="CipherRadioButton_Checked" />
+            <RadioButton Tag="1" GroupName="CipherType" FontFamily="Century Gothic" FontWeight="Bold" Content="Шифр Цезаря" HorizontalAlignment="Left" Margin="5" VerticalAlignment="Top" Checked="CipherRadioButton_Checked" IsChecked="True"/>
         </StackPanel>
         <Button x:Name="createCipherButton" Background="#FFE7EDFF" FontFamily="Century Gothic" FontWeight="Bold" Content="Создать" Margin="5" Click="CreateCipherButton_Click" Grid.Column="1" BorderBrush="#FFE7EDFF" HorizontalAlignment="Right"/>
         <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal" Margin="5" HorizontalAlignment="Right" Background="#FFE7EDFF">
